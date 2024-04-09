@@ -1,6 +1,7 @@
-#include "shell.h"
+#include "runner.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 char **fixOptions(char *name, char **options, int count) {
 	char **newOptions = malloc((count + 2) * sizeof(char*));
@@ -41,7 +42,7 @@ void runCommand(Command command) {
     IORedirect io = command.io;
 
     if (io.inFilename) {
-	redirectStandardFile(io.inFilename, STDIN_FILENO, TRUE);
+    redirectStandardFile(io.inFilename, STDIN_FILENO, true);
     }
 
     int fd[2];
@@ -66,7 +67,7 @@ void runCommand(Command command) {
     }
 
     if (io.outFilename) {
-	redirectStandardFile(io.outFilename, STDOUT_FILENO, FALSE);
+    redirectStandardFile(io.outFilename, STDOUT_FILENO, false);
     }
 
     runPart(list.parts[list.partsCount - 1]);

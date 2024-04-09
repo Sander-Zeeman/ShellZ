@@ -1,14 +1,11 @@
 #include "lexer.h"
 
-/*
- * This functions reads from the input file until either a space or a closing " is found.
- * If properString is TRUE, the first " is lost, so we can ignore it.
- * If properString is FALSE, the first character is lost and we have to reinsert it.
- * We look for a space when properString is FALSE and we look for a " when properString is TRUE.
- * When this character is found, we return the string we read up until this point.
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
 char *readString(bool properString, char firstChar, bool *isFinished, bool *error) {
-	bool properFinish = FALSE;
+    bool properFinish = false;
 	int size = 0;
 	char currChar;
 	char *result = NULL;
@@ -16,7 +13,7 @@ char *readString(bool properString, char firstChar, bool *isFinished, bool *erro
 	// Reinsert the first character, as mentioned in the header comment.
 	if (!properString) {
 		size++;
-		result = realloc(result, size * sizeof(char));
+        result = (char*)realloc(result, size * sizeof(char));
 		result[size - 1] = firstChar;
 	}
 
@@ -24,7 +21,7 @@ char *readString(bool properString, char firstChar, bool *isFinished, bool *erro
 	while ((currChar = getchar()) != '\n') {
 		if (properString) {
 			if (currChar == '"') {
-				properFinish = TRUE;
+                properFinish = true;
 				break;
 			}
 		} else {
@@ -40,13 +37,13 @@ char *readString(bool properString, char firstChar, bool *isFinished, bool *erro
 
 	// If we have a "proper" string, but did not find a closing ", the syntax must be incorrect.
 	if (properString && !properFinish) {
-		*error = TRUE;
+        *error = true;
 		invalidSyntaxError();
 	}
 
 	// Let the main tokenize function know whether the input line ended while reading a string.
 	if (currChar == '\n') {
-		*isFinished = TRUE;
+        *isFinished = true;
 	}
 
 	size++;
@@ -55,14 +52,13 @@ char *readString(bool properString, char firstChar, bool *isFinished, bool *erro
 	return result;
 }
 
-// Replace the string of characters in our input file by a list of tokens to allow for easier parsing/error detection.
 Token *tokenize(bool *error) {
     Token *startToken = NULL;
     Token *token = NULL;
     Token *prevToken = NULL;
 
     char currChar;
-    bool finishedReading = FALSE;
+    bool finishedReading = false;
 
     // Continue reading until we have tokenized the entire input line.
     while (!finishedReading) {
@@ -70,7 +66,7 @@ Token *tokenize(bool *error) {
 
 		// An input line ends on a newline character.
 		if (currChar == '\n') {
-		    finishedReading = TRUE;
+            finishedReading = true;
 		    break;
 		}
 
@@ -103,11 +99,11 @@ Token *tokenize(bool *error) {
 		    // A "proper" string (surrounded by quotation marks)
 		    case '"':
 				token->type = String;
-				token->content = readString(TRUE, '\0', &finishedReading, error);
+                token->content = readString(true, '\0', &finishedReading, error);
 				break;
 		    // If the token didn't match any other cases, it's a regular string.
 			default:
-				str = readString(FALSE, currChar, &finishedReading, error);
+                str = readString(false, currChar, &finishedReading, error);
 				if (compare(str, "exit")) {
 					free(str);
 					token->type = Exit;

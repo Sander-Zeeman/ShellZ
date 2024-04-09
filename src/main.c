@@ -1,8 +1,13 @@
-#include "main.h"
-#include "utilities.h"
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-Input readCommand(int *error) {
+#include "lexer.h"
+#include "parser.h"
+#include "runner.h"
+#include "errors.h"
+
+Input readCommand(bool *error) {
     Token *token = tokenize(error);
     Token *copy;
     copy = token;
@@ -18,8 +23,8 @@ void handle_sigchld(int sig) {
 }
 
 int main() {
-	bool error = FALSE;
-	bool finished = FALSE;
+    bool error = false;
+    bool finished = false;
 
 	int *processes;
 	processes = NULL;
@@ -34,13 +39,13 @@ int main() {
 
 		if (error) {
 			freeInput(&currentInput);
-			error = FALSE;
+            error = false;
 			continue;
 		}
 
 		if (currentInput.commandCount == 1 && currentInput.commands[0].exit) {
 			if (active == 0) {
-				finished = TRUE;
+                finished = true;
 			} else {
 				backgroundError();
 			}

@@ -1,7 +1,5 @@
-#include "errors.h"
-#include "utilities.h"
-#include "structs.h"
-#include "memory.h"
+#include "command.h"
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>

@@ -1,14 +1,7 @@
-/*
- * lexer.c/h lexes/tokenizes our input, so the parser can interpret it more easily,.
- * as well as detect errors far more easily.
- */
+#pragma once
 
-#include "structs.h"
-#include "errors.h"
-#include "utilities.h"
+#include "token.h"
 
-#include <stdio.h>
-
-char *readString(bool isProperString, char firstChar, bool *isFinished, bool *error);
+#include <stdbool.h>
 
 Token *tokenize(bool *error);

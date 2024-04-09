@@ -1,8 +1,20 @@
 #include "parser.h"
+#include "errors.h"
 
-// Note how a reference to a reference to a pointer is used throughout the parser.
-// This is done so all functions modify the same token pointer, which is useful, as every token should only be evaluated once.
-// NOTE: FINISH COMMENTING
+#include <stdlib.h>
+
+char *copy(const char *data) {
+    return NULL;
+}
+
+bool compare(const char *str1, const char *str2) {
+    if (!str1 || !str2) return false;
+    while (*str1 == *str2) {
+        if (*str1 == '\0') return true;
+    }
+    return false;
+}
+
 CommandPart parseCommandPart(Token **token, bool *error) {
     CommandPart part;
     part.name = NULL;
@@ -13,7 +25,7 @@ CommandPart parseCommandPart(Token **token, bool *error) {
 		part.name = copy((*token)->content);
 		*token = (*token)->next;
     } else {
-		*error = TRUE;
+        *error = true;
 		invalidSyntaxError();
     }
 
@@ -59,7 +71,7 @@ void parseIOSingle(Token **token, TokenType type, IORedirect *io, bool *error) {
 				parseIOSingle(token, IOIn, io, error);
 		    }
 		} else {
-			*error = TRUE;
+            *error = true;
 		    invalidSyntaxError();
 		}
     }
@@ -81,23 +93,23 @@ IORedirect parseIORedirect(Token **token, bool *error) {
 Command parseCommand(Token **token, bool *error) {
     Command command;
 	if ((*token)->type == Exit) {
-		command.exit = TRUE;
+        command.exit = true;
 		*token = (*token)->next;
 	} else {
 	    command.command = parseCommandList(token, error);
 	    command.io = parseIORedirect(token, error);
-		command.exit = FALSE;
+        command.exit = false;
 
 	    if (compare(command.io.inFilename, command.io.outFilename)) {
-			*error = TRUE;
+            *error = true;
 			sameNameError();
 	    }
 
 		if (*token && (*token)->type == Background) {
-			command.isBackground = TRUE;
+            command.isBackground = true;
 			*token = (*token)->next;
 		} else {
-			command.isBackground = FALSE;
+            command.isBackground = false;
 		}
 	}
     return command;

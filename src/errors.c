@@ -1,5 +1,7 @@
 #include "errors.h"
 
+#include <stdio.h>
+
 void invalidSyntaxError() {
     printf("Error: invalid syntax!\n");
 }
@@ -9,9 +11,9 @@ void sameNameError() {
 }
 
 void backgroundError() {
-	printf("Error: there are still background processes running!\n");
+    printf("Error: there are still background processes running!\n");
 }
 
 void notFoundError() {
-	printf("Error: command not found!\n");
+    printf("Error: command not found!\n");
 }
